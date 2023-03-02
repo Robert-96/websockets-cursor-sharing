@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const crypto = require('crypto');
 
-const wss = new WebSocket.Server({ port: 7071 });
+const wss = new WebSocket.Server({ port: 7171, path: '/cursor' });
 const clients = new Map();
 
 wss.on('connection', (ws) => {

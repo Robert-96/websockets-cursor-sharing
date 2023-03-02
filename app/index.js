@@ -8,12 +8,12 @@
 
   ws.onmessage = (webSocketMessage) => {
     const messageBody = JSON.parse(webSocketMessage.data);
-    const cursor = getOrCreateCursorFor(messageBody);
+    const cursor = getCursorFor(messageBody);
     cursor.style.transform = `translate(${messageBody.x}px, ${messageBody.y}px)`;
   };
 
   async function connectToServer() {
-    const ws = new WebSocket("ws://localhost:7071/ws");
+    const ws = new WebSocket("ws://localhost:7171/cursor");
 
     return new Promise((resolve, reject) => {
       const timer = setInterval(() => {
@@ -25,7 +25,7 @@
     });
   }
 
-  function getOrCreateCursorFor(messageBody) {
+  function getCursorFor(messageBody) {
     const sender = messageBody.sender;
     const existing = document.querySelector(`[data-sender="${sender}"]`);
 
