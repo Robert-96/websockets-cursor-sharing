@@ -1,4 +1,5 @@
 const WebSocket = require('ws');
+const crypto = require('crypto');
 
 const wss = new WebSocket.Server({ port: 7071 });
 const clients = new Map();
@@ -24,7 +25,7 @@ wss.on('connection', (ws) => {
     });
   });
 
-  ws.on("close", () => {
+  ws.on('close', () => {
     clients.delete(ws);
   });
 });
