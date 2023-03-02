@@ -13,15 +13,14 @@
   };
 
   async function connectToServer() {
-    const ws = new WebSocket("ws://localhost:7171/cursor");
-
+    const ws = new SockJS('http://localhost:7171/cursor');
     return new Promise((resolve, reject) => {
-      const timer = setInterval(() => {
-        if (ws.readyState === 1) {
-          clearInterval(timer)
-          resolve(ws);
-        }
-      }, 10);
+        const timer = setInterval(() => {
+            if(ws.readyState === 1) {
+                clearInterval(timer);
+                resolve(ws);
+            }
+        }, 10);
     });
   }
 

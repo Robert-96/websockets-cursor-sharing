@@ -1,7 +1,8 @@
-const WebSocket = require('ws');
+const http = require('http');
+const sockjs = require('sockjs');
 const crypto = require('crypto');
 
-const wss = new WebSocket.Server({ port: 7171, path: '/cursor' });
+const wss = sockjs.createServer();
 const clients = new Map();
 
 wss.on('connection', (ws) => {
@@ -11,7 +12,7 @@ wss.on('connection', (ws) => {
 
   clients.set(ws, metadata);
 
-  ws.on('message', (messageAsString) => {
+  ws.on('data', (messageAsString) => {
     const message = JSON.parse(messageAsString);
     const metadata = clients.get(ws);
 
@@ -21,7 +22,7 @@ wss.on('connection', (ws) => {
     const outbound = JSON.stringify(message);
 
     [...clients.keys()].forEach((client) => {
-      client.send(outbound);
+      client.write(outbound);
     });
   });
 
@@ -29,3 +30,7 @@ wss.on('connection', (ws) => {
     clients.delete(ws);
   });
 });
+
+const server = http.createServer();
+wss.installHandlers(server, { prefix: '/cursor' });
+server.listen(7171, '0.0.0.0');
